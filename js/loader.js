@@ -6,6 +6,11 @@ class WasmLoader {
           throw new Error("Abort called from wasm file");
         },
       },
+      index: {
+        log(n) {
+          console.log(n);
+        },
+      },
     };
   }
 
