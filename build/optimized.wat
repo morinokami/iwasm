@@ -35,7 +35,7 @@
  (data (i32.const 1500) "<")
  (data (i32.const 1512) "\01\00\00\00(\00\00\00O\00b\00j\00e\00c\00t\00 \00i\00s\00 \00n\00o\00t\00 \00p\00i\00n\00n\00e\00d")
  (data (i32.const 1568) "\03\00\00\00 \00\00\00\00\00\00\00 ")
- (export "readMemory" (func $assembly/index/readMemory))
+ (export "isPrimeWasm" (func $assembly/index/isPrimeWasm))
  (export "__new" (func $~lib/rt/itcms/__new))
  (export "__pin" (func $~lib/rt/itcms/__pin))
  (export "__unpin" (func $~lib/rt/itcms/__unpin))
@@ -43,9 +43,38 @@
  (export "__rtti_base" (global $~lib/rt/__rtti_base))
  (export "memory" (memory $0))
  (start $~start)
- (func $assembly/index/readMemory (param $0 i32) (result i32)
+ (func $assembly/index/isPrimeWasm (param $0 i32) (result i32)
+  (local $1 i32)
   local.get $0
-  i32.load8_u
+  i32.const 2
+  i32.lt_u
+  if
+   i32.const 0
+   return
+  end
+  i32.const 2
+  local.set $1
+  loop $for-loop|0
+   local.get $0
+   local.get $1
+   i32.gt_u
+   if
+    local.get $0
+    local.get $1
+    i32.rem_u
+    i32.eqz
+    if
+     i32.const 0
+     return
+    end
+    local.get $1
+    i32.const 1
+    i32.add
+    local.set $1
+    br $for-loop|0
+   end
+  end
+  i32.const 1
  )
  (func $~lib/rt/itcms/initLazy (param $0 i32) (result i32)
   local.get $0
@@ -1862,15 +1891,6 @@
   unreachable
  )
  (func $~start
-  i32.const 2
-  memory.grow
-  drop
-  i32.const 0
-  i32.const 21
-  i32.store8
-  i32.const 1
-  i32.const 99
-  i32.store8
   memory.size
   i32.const 16
   i32.shl
